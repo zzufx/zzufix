@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'com.diffplug.spotless' version '6.25.0'
+}
+
+group = 'io.github.zzufx.zzufix'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat()
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc-repo'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.jar {
+    destinationDirectory = file("$rootDir")
+}
+
+jar {
+    archiveBaseName.set('zzufix')
+    archiveVersion.set('')
+}
+
+tasks.named('compileJava') {
+    dependsOn 'spotlessApply'
+}
+
+import java.text.SimpleDateFormat
+
+def timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date())
+version = "${timestamp}"
+
+processResources {
+    filesMatching("plugin.yml") {
+        expand(project.properties)
+    }
+}

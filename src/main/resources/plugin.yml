@@ -1,0 +1,7 @@
+name: zzufix
+description: 1.8 SportPaper and vanilla behavior for 1.21
+version: ${version}
+main: io.github.zzufx.zzufix.zzufixPlugin
+api-version: '1.21'
+author: zzuf
+website: https://github.com/zzufx
