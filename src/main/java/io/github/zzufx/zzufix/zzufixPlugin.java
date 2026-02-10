@@ -15,14 +15,24 @@ import org.bukkit.util.Vector;
 
 public class zzufixPlugin extends JavaPlugin implements Listener {
 
+  private boolean tntEnabled;
+  private boolean projectilesEnabled;
+
   @Override
   public void onEnable() {
+    saveDefaultConfig();
+    reloadConfig();
+
+    tntEnabled = getConfig().getBoolean("features.tnt", true);
+    projectilesEnabled = getConfig().getBoolean("features.projectiles", true);
+
     getServer().getPluginManager().registerEvents(this, this);
   }
 
   // tnt
   @EventHandler
   public void onEntitySpawn(EntitySpawnEvent event) {
+    if (!tntEnabled) return;
     if (!(event.getEntity() instanceof TNTPrimed tnt)) return;
 
     Bukkit.getScheduler()
@@ -59,10 +69,10 @@ public class zzufixPlugin extends JavaPlugin implements Listener {
   // thrown projectiles (snowballs and eggs)
   @EventHandler
   public void onEntityDamage(EntityDamageByEntityEvent event) {
+    if (!projectilesEnabled) return;
     if (!(event.getDamager() instanceof Snowball) && !(event.getDamager() instanceof Egg)) return;
-    if (!(event.getEntity() instanceof Player)) return;
+    if (!(event.getEntity() instanceof Player target)) return;
 
-    Player target = (Player) event.getEntity();
     event.setDamage(1.0);
 
     Vector direction =
